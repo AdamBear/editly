@@ -34,7 +34,7 @@ async function validateArbitraryAudio(audio, allowRemoteRequests) {
   }
 }
 
-export default async function parseConfig({ defaults: defaultsIn = {}, clips, arbitraryAudio: arbitraryAudioIn, backgroundAudioPath, loopAudio, allowRemoteRequests, ffprobePath }) {
+export default async function parseConfig({ defaults: defaultsIn = {}, clips, arbitraryAudio: arbitraryAudioIn, backgroundAudioPath, backgroundAudioVolume, loopAudio, allowRemoteRequests, ffprobePath }) {
   const defaults = {
     duration: 4,
     ...defaultsIn,
@@ -151,7 +151,7 @@ export default async function parseConfig({ defaults: defaultsIn = {}, clips, ar
 
         const inputDuration = cutTo - cutFrom;
 
-        const isRotated = rotation === 90 || rotation === 270;
+        const isRotated = [-90, 90, 270, -270].includes(rotation);
         const inputWidth = isRotated ? heightIn : widthIn;
         const inputHeight = isRotated ? widthIn : heightIn;
 
@@ -278,7 +278,7 @@ export default async function parseConfig({ defaults: defaultsIn = {}, clips, ar
   // Audio can either come from `audioFilePath`, `audio` or from "detached" audio layers from clips
   const arbitraryAudio = [
     // Background audio is treated just like arbitrary audio
-    ...(backgroundAudioPath ? [{ path: backgroundAudioPath, mixVolume: 1, loop: loopAudio ? -1 : 0 }] : []),
+    ...(backgroundAudioPath ? [{ path: backgroundAudioPath, mixVolume: backgroundAudioVolume != null ? backgroundAudioVolume : 1, loop: loopAudio ? -1 : 0 }] : []),
     ...arbitraryAudioIn,
     ...clipDetachedAudio,
   ];
