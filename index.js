@@ -21,7 +21,7 @@ async function Editly(config = {}) {
     enableFfmpegLog = false,
     verbose = false,
     logTimes = false,
-    keepTmp = false,
+    keepTmp = true,
     fast,
 
     outPath,
@@ -381,7 +381,7 @@ async function Editly(config = {}) {
   } finally {
     if (verbose) console.log('Cleanup');
     if (frameSource1) await frameSource1.close();
-    if (frameSource2) await frameSource2.close();
+    if (frameSource2) await frameSource2.close();	
     if (!keepTmp) await fsExtra.remove(tmpDir);
   }
 
